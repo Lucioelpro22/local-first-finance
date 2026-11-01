@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#0b1714">
   <meta name="description" content="Panel privado y local-first para importar y clasificar movimientos bancarios.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
   <title>Folio — Finanzas privadas, en tu dispositivo</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -25,7 +28,7 @@
     <main>
       <header class="topbar">
         <div><p class="eyebrow" id="dateLabel"></p><h1 id="pageTitle">Tu panorama financiero</h1></div>
-        <div class="header-actions"><span class="private-pill">● Privado</span><button class="btn primary" data-go="import">Importar movimientos</button></div>
+        <div class="header-actions"><button class="btn ghost hidden" id="installBtn">Instalar app</button><span class="private-pill">● Privado</span><button class="btn primary" data-go="import">Importar movimientos</button></div>
       </header>
 
       <section id="dashboard" class="view active">
@@ -54,7 +57,7 @@
 
       <section id="import" class="view">
         <div class="section-intro"><div><p class="eyebrow">Entrada segura</p><h2>Importar movimientos</h2><p class="muted">Compatible con CSV de la mayoría de los bancos. El archivo se procesa íntegramente en tu navegador.</p></div></div>
-        <article class="privacy-banner"><span>⌾</span><div><strong>Tu archivo nunca se sube</strong><p>Folio no usa servidores, cuentas ni telemetría. Podés cerrar la pestaña y seguir offline.</p></div></article>
+        <article class="privacy-banner"><span>⌾</span><div><strong>Tu archivo nunca se sube</strong><p>Folio no usa servidores, cuentas ni telemetría. Podés instalarlo y seguir trabajando offline.</p></div></article>
         <div id="dropzone" class="dropzone" tabindex="0" role="button"><div class="upload-icon">⇧</div><h3>Arrastrá tu archivo CSV acá</h3><p>o hacé clic para elegirlo · máximo recomendado 10 MB</p><input id="fileInput" type="file" accept=".csv,text/csv" hidden><button class="btn primary" id="chooseFile">Elegir archivo</button></div>
         <div class="import-actions"><span>¿Querés probar primero?</span><button class="btn ghost" id="loadSample">Cargar datos de ejemplo</button></div>
         <article id="importPreview" class="panel import-preview hidden"><div class="panel-head"><div><p class="eyebrow">Vista previa</p><h3 id="previewTitle">Archivo detectado</h3></div><span id="previewCount" class="badge"></span></div><div class="mapping-grid"><label>Fecha<select id="dateColumn"></select></label><label>Descripción<select id="descriptionColumn"></select></label><label>Importe<select id="amountColumn"></select></label><label>Cuenta<select id="accountColumn"></select></label></div><div class="table-wrap"><table><thead id="previewHead"></thead><tbody id="previewBody"></tbody></table></div><div class="preview-footer"><p id="previewHint" class="muted"></p><button class="btn primary" id="confirmImport">Importar movimientos</button></div></article>
