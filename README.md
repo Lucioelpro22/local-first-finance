@@ -12,6 +12,8 @@ Panel web para importar movimientos bancarios desde CSV, clasificarlos y analiza
 - Respaldo/exportación CSV y borrado completo de datos.
 - Persistencia exclusiva en `localStorage`; sin cookies, cuentas, analytics ni APIs.
 - Interfaz responsive y accesible, optimizada para desktop y móvil.
+- Instalable como PWA y disponible offline después de la primera visita.
+- Detección automática de movimientos duplicados al importar.
 
 ## Ejecutar localmente
 
@@ -45,6 +47,8 @@ Todos los cálculos y transformaciones ocurren en el navegador. El archivo selec
 index.html   Interfaz y estructura semántica
 styles.css   Sistema visual responsive
 app.js       Estado local, CSV, reglas, filtros y gráficos
+service-worker.js  Caché offline versionada
+manifest.webmanifest  Metadatos de instalación PWA
 ```
 
 ## Seguridad
