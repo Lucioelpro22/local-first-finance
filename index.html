@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1714">
+  <meta name="description" content="Panel privado y local-first para importar y clasificar movimientos bancarios.">
+  <title>Folio — Finanzas privadas, en tu dispositivo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#dashboard" aria-label="Folio, inicio"><span class="brand-mark">F</span><span>folio</span></a>
+      <nav aria-label="Navegación principal">
+        <button class="nav-item active" data-view="dashboard"><span>⌂</span>Resumen</button>
+        <button class="nav-item" data-view="transactions"><span>↕</span>Movimientos</button>
+        <button class="nav-item" data-view="import"><span>＋</span>Importar CSV</button>
+        <button class="nav-item" data-view="rules"><span>⌁</span>Reglas</button>
+        <button class="nav-item" data-view="settings"><span>⚙</span>Ajustes</button>
+      </nav>
+      <div class="privacy-card"><span class="pulse"></span><div><strong>100% local</strong><small>Tus datos no salen de este dispositivo.</small></div></div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div><p class="eyebrow" id="dateLabel"></p><h1 id="pageTitle">Tu panorama financiero</h1></div>
+        <div class="header-actions"><span class="private-pill">● Privado</span><button class="btn primary" data-go="import">Importar movimientos</button></div>
+      </header>
+
+      <section id="dashboard" class="view active">
+        <div class="hero-row">
+          <div><p class="muted">Este mes</p><h2 id="monthLabel">Noviembre 2026</h2></div>
+          <div class="period-control"><button id="prevMonth" aria-label="Mes anterior">‹</button><button id="todayMonth">Hoy</button><button id="nextMonth" aria-label="Mes siguiente">›</button></div>
+        </div>
+        <div class="metrics">
+          <article class="metric"><div class="metric-top"><span>Balance del mes</span><i class="icon green">↗</i></div><strong id="balanceMetric">$0</strong><small id="balanceDelta">Sin datos todavía</small></article>
+          <article class="metric"><div class="metric-top"><span>Ingresos</span><i class="icon mint">＋</i></div><strong id="incomeMetric">$0</strong><small>Entradas registradas</small></article>
+          <article class="metric"><div class="metric-top"><span>Gastos</span><i class="icon coral">−</i></div><strong id="expenseMetric">$0</strong><small>Salidas registradas</small></article>
+          <article class="metric"><div class="metric-top"><span>Tasa de ahorro</span><i class="icon amber">%</i></div><strong id="savingMetric">0%</strong><small>Sobre ingresos del mes</small></article>
+        </div>
+        <div class="dashboard-grid">
+          <article class="panel chart-panel"><div class="panel-head"><div><p class="muted">Flujo mensual</p><h3>Ingresos vs. gastos</h3></div><div class="legend"><span><i class="dot income"></i>Ingresos</span><span><i class="dot expense"></i>Gastos</span></div></div><canvas id="flowChart" height="220"></canvas></article>
+          <article class="panel categories-panel"><div class="panel-head"><div><p class="muted">Distribución</p><h3>Gastos por categoría</h3></div><button class="text-btn" data-go="transactions">Ver todos</button></div><div id="categoryBreakdown" class="category-list"></div></article>
+        </div>
+        <article class="panel recent-panel"><div class="panel-head"><div><p class="muted">Actividad reciente</p><h3>Últimos movimientos</h3></div><button class="text-btn" data-go="transactions">Explorar movimientos →</button></div><div id="recentTransactions"></div></article>
+      </section>
+
+      <section id="transactions" class="view">
+        <div class="section-intro"><div><p class="eyebrow">Biblioteca local</p><h2>Movimientos</h2><p class="muted">Buscá, filtrá y corregí categorías. Cada cambio queda guardado en este navegador.</p></div><button class="btn primary" data-go="import">＋ Importar CSV</button></div>
+        <div class="toolbar"><label class="search">⌕ <input id="searchInput" type="search" placeholder="Buscar comercio o descripción"></label><select id="categoryFilter"><option value="all">Todas las categorías</option></select><select id="typeFilter"><option value="all">Ingresos y gastos</option><option value="income">Ingresos</option><option value="expense">Gastos</option></select><button class="btn ghost" id="exportBtn">Exportar CSV</button></div>
+        <article class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Descripción</th><th>Categoría</th><th>Cuenta</th><th class="amount-col">Importe</th></tr></thead><tbody id="transactionTable"></tbody></table></div><div id="emptyTransactions" class="empty-state"><div class="empty-icon">↕</div><h3>Todavía no hay movimientos</h3><p>Importá un CSV bancario o cargá los datos de ejemplo.</p><button class="btn primary" data-go="import">Importar ahora</button></div></article>
+      </section>
+
+      <section id="import" class="view">
+        <div class="section-intro"><div><p class="eyebrow">Entrada segura</p><h2>Importar movimientos</h2><p class="muted">Compatible con CSV de la mayoría de los bancos. El archivo se procesa íntegramente en tu navegador.</p></div></div>
+        <article class="privacy-banner"><span>⌾</span><div><strong>Tu archivo nunca se sube</strong><p>Folio no usa servidores, cuentas ni telemetría. Podés cerrar la pestaña y seguir offline.</p></div></article>
+        <div id="dropzone" class="dropzone" tabindex="0" role="button"><div class="upload-icon">⇧</div><h3>Arrastrá tu archivo CSV acá</h3><p>o hacé clic para elegirlo · máximo recomendado 10 MB</p><input id="fileInput" type="file" accept=".csv,text/csv" hidden><button class="btn primary" id="chooseFile">Elegir archivo</button></div>
+        <div class="import-actions"><span>¿Querés probar primero?</span><button class="btn ghost" id="loadSample">Cargar datos de ejemplo</button></div>
+        <article id="importPreview" class="panel import-preview hidden"><div class="panel-head"><div><p class="eyebrow">Vista previa</p><h3 id="previewTitle">Archivo detectado</h3></div><span id="previewCount" class="badge"></span></div><div class="mapping-grid"><label>Fecha<select id="dateColumn"></select></label><label>Descripción<select id="descriptionColumn"></select></label><label>Importe<select id="amountColumn"></select></label><label>Cuenta<select id="accountColumn"></select></label></div><div class="table-wrap"><table><thead id="previewHead"></thead><tbody id="previewBody"></tbody></table></div><div class="preview-footer"><p id="previewHint" class="muted"></p><button class="btn primary" id="confirmImport">Importar movimientos</button></div></article>
+      </section>
+
+      <section id="rules" class="view">
+        <div class="section-intro"><div><p class="eyebrow">Automatización local</p><h2>Reglas de clasificación</h2><p class="muted">Las reglas se aplican al importar y también podés ejecutarlas sobre tu historial.</p></div><button class="btn primary" id="newRuleBtn">＋ Nueva regla</button></div>
+        <div class="rules-layout"><article class="panel"><div class="panel-head"><h3>Reglas activas</h3><button class="text-btn" id="applyRulesBtn">Aplicar a todo</button></div><div id="rulesList"></div></article><article class="panel rule-guide"><p class="eyebrow">Cómo funciona</p><h3>Menos correcciones con cada importación</h3><ol><li><span>1</span><div><strong>Detecta</strong><p>Busca una palabra dentro de la descripción.</p></div></li><li><span>2</span><div><strong>Clasifica</strong><p>Asigna automáticamente la categoría elegida.</p></div></li><li><span>3</span><div><strong>Aprende de vos</strong><p>Creá reglas desde patrones frecuentes.</p></div></li></ol></article></div>
+      </section>
+
+      <section id="settings" class="view">
+        <div class="section-intro"><div><p class="eyebrow">Control de datos</p><h2>Ajustes y privacidad</h2><p class="muted">Vos tenés el control. No existe una copia remota de tu información.</p></div></div>
+        <div class="settings-grid"><article class="panel setting-card"><div class="setting-icon">$</div><div><h3>Moneda</h3><p>Formato usado en métricas y movimientos.</p><select id="currencySelect"><option value="ARS">Peso argentino (ARS)</option><option value="USD">Dólar estadounidense (USD)</option><option value="EUR">Euro (EUR)</option></select></div></article><article class="panel setting-card"><div class="setting-icon">⇩</div><div><h3>Respaldo local</h3><p>Exportá todos tus movimientos como CSV.</p><button class="btn ghost" id="backupBtn">Descargar respaldo</button></div></article><article class="panel setting-card danger"><div class="setting-icon">×</div><div><h3>Borrar datos</h3><p>Elimina movimientos, reglas y preferencias de este navegador.</p><button class="btn danger-btn" id="clearDataBtn">Borrar todo</button></div></article></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="ruleDialog"><form method="dialog"><div class="modal-head"><div><p class="eyebrow">Nueva automatización</p><h3>Crear regla</h3></div><button value="cancel" class="close-btn" aria-label="Cerrar">×</button></div><label>Si la descripción contiene<input id="ruleKeyword" required placeholder="Ej: supermercado"></label><label>Asignar categoría<select id="ruleCategory"></select></label><div class="modal-actions"><button value="cancel" class="btn ghost">Cancelar</button><button value="default" class="btn primary" id="saveRuleBtn">Guardar regla</button></div></form></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
+
